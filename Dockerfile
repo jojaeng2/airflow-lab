@@ -19,6 +19,8 @@ ENV APP_HOME=$USER_HOME/apps
 ENV AIRFLOW_HOME=$APP_HOME/airflow
 ENV CONSTRAINT_URL="https://raw.githubusercontent.com/apache/airflow/constraints-${AIRFLOW_VERSION}/constraints-${PYTHON_LIMIT_VERSION_FOR_AIRFLOW_DOWNLOAD}.txt"
 ENV PIP_ROOT_USER_ACTION=ignore
+ENV AIRFLOW__DATABASE__SQL_ALCHEMY_CONN=postgresql+psycopg2://airflow:1234@host.docker.internal:5432/airflow_db
+
 
 # create directory
 RUN mkdir -p $USER_HOME \
@@ -28,14 +30,17 @@ RUN mkdir -p $USER_HOME \
 # download airflow
 RUN set -ex \
     && pip install --upgrade pip \
-    && pip install mysqlclient --constraint "${CONSTRAINT_URL}" \
-    && pip install --no-cache-dir apache-airflow==${AIRFLOW_VERSION} --constraint "${CONSTRAINT_URL}"
+    && pip install --no-cache-dir apache-airflow[postgres]==${AIRFLOW_VERSION} --constraint "${CONSTRAINT_URL}"
 
 # Metadata DB init
+RUN airflow db migrate
 
 # COPY dag files
 
 # COPY scripts
+#COPY /terra-infras/kubernetes/common/docker/scripts $SCRIPT_HOME
+#COPY /terra-infras/kubernetes/airflow/docker/scripts $SCRIPT_HOME
 
 
 WORKDIR ${AIRFLOW_HOME}
+ENTRYPOINT ["airflow", "standalone"]

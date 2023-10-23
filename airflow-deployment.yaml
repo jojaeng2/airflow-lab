@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: airflow-deployment
+  labels:
+    app: test
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: airflow
+  template:
+    metadata:
+      name: airflow
+      labels:
+        app: airflow
+    spec:
+      containers:
+        - name: airflow-container
+          image: ds4ouj/custom-airflow
+          imagePullPolicy: IfNotPresent
+      restartPolicy: Always
+      

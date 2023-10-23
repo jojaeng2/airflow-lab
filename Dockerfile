@@ -22,6 +22,7 @@ ENV CONSTRAINT_URL="https://raw.githubusercontent.com/apache/airflow/constraints
 ENV PIP_ROOT_USER_ACTION=ignore
 ENV AIRFLOW__DATABASE__SQL_ALCHEMY_CONN=postgresql+psycopg2://airflow:1234@host.docker.internal:5432/airflow_db
 ENV AIRFLOW__CORE__DAGS_FOLDER=$AIRFLOW_DAG_HOME
+ENV AIRFLOW__CORE__EXECUTOR=KubernetesExecutor
 
 # create directory
 RUN mkdir -p $USER_HOME \
@@ -32,7 +33,7 @@ RUN mkdir -p $USER_HOME \
 # download airflow
 RUN set -ex \
     && pip install --upgrade pip \
-    && pip install --no-cache-dir apache-airflow[postgres]==${AIRFLOW_VERSION} --constraint "${CONSTRAINT_URL}"
+    && pip install --no-cache-dir apache-airflow[postgres,kubernetes]==${AIRFLOW_VERSION} --constraint "${CONSTRAINT_URL}"
 
 # Metadata DB init
 RUN airflow db migrate

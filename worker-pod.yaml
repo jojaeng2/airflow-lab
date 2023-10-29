@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: Title
+  labels:
+    app: airflow-worker
+spec:
+  containers:
+    - name: airflow-worker
+      image: ds4ouj/custom-airflow-worker
+      imagePullPolicy: Always
+  restartPolicy: OnFailure

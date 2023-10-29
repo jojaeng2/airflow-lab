@@ -1,11 +1,14 @@
 import pendulum
 
 from airflow.decorators import dag, task
+from airflow.settings import AIRFLOW_HOME
+
+from kubernetes.client import models as k8s
 
 @dag(
     schedule=None,
     start_date=pendulum.datetime(2023, 10, 22, tz="UTC"),
-    tags=["example"]
+    tags=["example"],
 )
 def first_dag_by_taskflow_api():
 
@@ -19,4 +22,4 @@ def first_dag_by_taskflow_api():
 
     print_hello() >> print_world()
 
-first_dag_by_taskflow_api()
+# first_dag_by_taskflow_api()

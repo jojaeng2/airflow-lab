@@ -23,9 +23,9 @@ ENV CONSTRAINT_URL="https://raw.githubusercontent.com/apache/airflow/constraints
 ENV PIP_ROOT_USER_ACTION=ignore
 ENV AIRFLOW__DATABASE__SQL_ALCHEMY_CONN=postgresql+psycopg2://airflow:1234@host.docker.internal:5432/airflow_db
 ENV AIRFLOW__CORE__DAGS_FOLDER=$AIRFLOW_DAG_HOME
-ENV AIRFLOW__CORE__EXECUTOR=KubernetesExecutor
-ENV AIRFLOW__KUBERNETES_EXECUTOR__POD_TEMPLATE_FILE=$AIRFLOW_WORKER_CONFIG_HOME/worker-pod.yaml
+ENV AIRFLOW__CORE__EXECUTOR=CeleryExecutor
 ENV AIRFLOW__CORE__LOAD_EXAMPLES=False
+ENV AIRFLOW__CELERY__BROKER_URL=amqp://test:test@host.docker.internal:5672/
 
 # create directory
 RUN mkdir -p $USER_HOME \
@@ -37,7 +37,7 @@ RUN mkdir -p $USER_HOME \
 # download airflow
 RUN set -ex \
     && pip install --upgrade pip \
-    && pip install --no-cache-dir apache-airflow[postgres,kubernetes,ssh]==${AIRFLOW_VERSION} --constraint "${CONSTRAINT_URL}"
+    && pip install --no-cache-dir apache-airflow[postgres,kubernetes,ssh,celery,rabbitmq]==${AIRFLOW_VERSION} --constraint "${CONSTRAINT_URL}"
 
 # Metadata DB init
 RUN airflow db init

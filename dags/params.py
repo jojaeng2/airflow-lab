@@ -1,6 +1,6 @@
 import pendulum
 import os
-from plugins.utils import batch_utils
+from commons import batch_utils
 from airflow.decorators import dag, task
 from airflow.models.param import Param
 from airflow.operators.bash import BashOperator

@@ -1,6 +1,6 @@
 import pendulum
 import os
-from airflow.utils import batch_utils
+from utils.batch_utils import create_scripts
 from airflow.decorators import dag, task
 from airflow.models.param import Param
 from airflow.operators.bash import BashOperator
@@ -29,7 +29,7 @@ def account_personal_info_decryption():
     def get_batch_scripts():
         context = get_current_context()
         params = context["params"]
-        return batch_utils.create_scripts(instance_list=get_phased_instance(), params=params)
+        return create_scripts(instance_list=get_phased_instance(), params=params)
         
 
     batch_run = BashOperator(

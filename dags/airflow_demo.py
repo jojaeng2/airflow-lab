@@ -16,3 +16,4 @@ with DAG(dag_id="demo", start_date=datetime(2022, 1, 1), schedule="0 0 * * *") a
 
     # Set dependencies between tasks
     hello >> airflow()
+    asd
